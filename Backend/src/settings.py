@@ -13,7 +13,7 @@ class OllamaSettings(BaseModel):
 
 
 class Settings(BaseSettings):
-    """Application settings loaded from environment variables."""
+    """Application settings loaded from .env file and environment variables."""
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -22,19 +22,19 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # API Configuration
-    app_name: str = Field(default="Backend API", description="Application name")
-    app_version: str = Field(default="0.0.0", description="Application version")
+    # Static application configuration (not configurable)
+    APP_NAME: str = "Backend API"
+    APP_VERSION: str = "0.1.0"
+
+    # Configurable settings
     debug: bool = Field(default=False, description="Enable debug mode")
+    log_level: str = Field(default="INFO", description="Logging level")
 
     # Ollama Configuration
     ollama: Optional[OllamaSettings] = Field(
         default=None,
         description="Ollama configuration"
     )
-
-    # Logging Configuration
-    log_level: str = Field(default="INFO", description="Logging level")
 
 
 # Global settings instance

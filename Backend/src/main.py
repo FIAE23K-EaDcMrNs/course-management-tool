@@ -1,5 +1,6 @@
 """FastAPI application entry point."""
 
+import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,17 +8,21 @@ from loguru import logger
 from routes import router
 from settings import settings
 
+# Configure loguru logger
+logger.remove()  # Remove default handler
+logger.add(sys.stderr, level=settings.log_level.upper())
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
-    logger.info("Starting up {}", settings.app_name)
+    logger.info("Starting up {}", settings.APP_NAME)
     yield
-    logger.info("Shutting down {}", settings.app_name)
+    logger.info("Shutting down {}", settings.APP_NAME)
 
 # Create FastAPI application
 app = FastAPI(
-    title=settings.app_name,
-    version=settings.app_version,
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
     debug=settings.debug,
     lifespan=lifespan,
 )
