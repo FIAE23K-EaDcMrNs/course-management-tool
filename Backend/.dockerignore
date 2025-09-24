@@ -1,0 +1,37 @@
+# Development files
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+
+# Documentation and configuration
+README.md
+CLAUDE.md
+.vscode/
+.git/
+.gitignore
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
