@@ -15,5 +15,5 @@ async def health_check() -> HealthResponse:
 
     return HealthResponse(
         status="healthy",
-        message=f"{settings.app_name} v{settings.app_version} is running"
+        message=f"{settings.APP_NAME} v{settings.APP_VERSION} is running"
     )
