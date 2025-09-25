@@ -1,12 +1,12 @@
 services:
   frontend-php:
     build:
-      context: ./frontend
+      context: Frontend
       dockerfile: Dockerfile
     environment:
       API_BASE_URL: "http://backend:8000"
     volumes:
-      - ./frontend:/var/www/html:delegated
+      - ./Frontend:/var/www/html:delegated
 
   frontend-nginx:
     image: nginx:alpine
@@ -15,5 +15,5 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./frontend:/var/www/html:ro
-      - ./Docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./Frontend:/var/www/html:ro
+      - ./Nginx/nginx.conf:/etc/nginx/nginx.conf:ro

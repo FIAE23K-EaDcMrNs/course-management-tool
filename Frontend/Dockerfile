@@ -3,6 +3,7 @@ FROM php:8.2-fpm-alpine
 RUN apk add --no-cache git icu-dev oniguruma-dev libzip-dev bash \
  && docker-php-ext-install intl mbstring zip opcache
 
+# Install Composer from the official Composer image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
