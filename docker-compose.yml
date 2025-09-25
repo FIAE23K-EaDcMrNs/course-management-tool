@@ -4,7 +4,7 @@ services:
       context: Frontend
       dockerfile: Dockerfile
     environment:
-      API_BASE_URL: "http://backend:8000"
+      API_BASE_URL: "http://backend:9125"
     volumes:
       - ./Frontend:/var/www/html:delegated
 
