@@ -1,0 +1,5 @@
+vendor
+runtime
+.git
+node_modules
+Dockerfile
