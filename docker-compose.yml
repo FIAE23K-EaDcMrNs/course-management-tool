@@ -12,9 +12,9 @@ services:
       - "8080:80"
     # Optional persistente Volumes nur für Laufzeitdaten:
     volumes:
-      - app-runtime:/var/www/html/runtime
-      - app-assets:/var/www/html/web/assets
+      - frontend-runtime:/var/www/html/runtime
+      - frontend-assets:/var/www/html/web/assets
 
 volumes:
-  app-runtime:
-  app-assets:
+  frontend-runtime:
+  frontend-assets:
