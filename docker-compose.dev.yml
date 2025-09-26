@@ -3,14 +3,18 @@ services:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
-      target: production
+      target: development
     environment:
-      YII_ENV: "prod"
-      YII_DEBUG: "false"
+      YII_ENV: "dev"
+      YII_DEBUG: "true"
       # Beispiel für API-Basis-URL Richtung Backend:
       # API_BASE_URL: "http://localhost:8081"
     ports:
       - "8080:80"
+    volumes:
+      - ./Frontend:/var/www/html
+      - frontend-runtime:/var/www/html/runtime
+      - frontend-assets:/var/www/html/web/assets
 
   backend:
     build:
@@ -19,7 +23,11 @@ services:
     environment:
       HOST: "0.0.0.0"
       PORT: "5689"
-      DEBUG: "false"
-      LOGLEVEL: "INFO"
+      DEBUG: "true"
+      LOGLEVEL: "DEBUG"
     ports:
-      - "8081:${PORT:-5689}"
+      - "8081:5689"
+
+volumes:
+  frontend-runtime:
+  frontend-assets:
