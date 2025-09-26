@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'apiBaseUrl' => getenv('API_BASE_URL') ?: 'http://localhost:8000',
+    'adminEmail' => 'admin@example.com',
+    'senderEmail' => 'noreply@example.com',
+    'senderName' => 'Example.com mailer',
 ];

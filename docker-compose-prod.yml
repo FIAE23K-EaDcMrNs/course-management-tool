@@ -1,0 +1,17 @@
+services:
+  frontend-php:
+    build:
+      context: Frontend
+      dockerfile: Nginx/Dockerfile
+    environment:
+      API_BASE_URL: "http://backend:9125"
+    ports:
+      - "8080:80"
+    volumes:
+      - app-runtime:/var/www/html/runtime
+      - app-assets:/var/www/html/web/assets
+
+
+volumes:
+  app-runtime:
+  app-assets:
