@@ -1,6 +1,11 @@
+name: course_app
+
 networks:
     course_net:
       driver: bridge
+
+volumes:
+    course_data:
 
 services:
   frontend:
@@ -38,9 +43,27 @@ services:
     - "1521:1521"
     - "5500:5500"
     volumes:
-    - ./oradata:/opt/oracle/oradata:Z
-    - ./DB/init:/opt/oracle/scripts/setup:Z
+    - course_data:/opt/oracle/oradata:Z
     environment:
     - ORACLE_PWD=password
     networks:
     - course_net
+
+  db-migration:
+    image: ghcr.io/oracle/oraclelinux9-instantclient:23
+    depends_on:
+      - oracle-db
+    volumes:
+      - ./DB/init/db_init.sh:/scripts/db_init.sh:ro
+      - ./DB/init/sql/01_Migration.sql:/scripts/migration.sql:ro
+    environment:
+      - ORACLE_PASSWORD=password
+      - APP_USER=app
+      - APP_PASSWORD=apppassword
+      - ORACLE_HOST=oracle-db
+      - ORACLE_PORT=1521
+      - ORACLE_SERVICE=FREEPDB1
+    networks:
+      - course_net
+    command: ["sh", "/scripts/db_init.sh"]
+    restart: "no"
