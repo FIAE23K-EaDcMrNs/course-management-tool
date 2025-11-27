@@ -1,3 +1,7 @@
+networks:
+    course_net:
+      driver: bridge
+
 services:
   frontend:
     build:
@@ -11,6 +15,8 @@ services:
       # API_BASE_URL: "http://localhost:8081"
     ports:
       - "8080:80"
+    networks:
+      - course_net
 
   backend:
     build:
@@ -23,3 +29,18 @@ services:
       LOGLEVEL: "INFO"
     ports:
       - "8081:${PORT:-5689}"
+    networks:
+      - course_net
+
+  oracle-db:
+    image: container-registry.oracle.com/database/free:latest
+    ports:
+    - "1521:1521"
+    - "5500:5500"
+    volumes:
+    - ./oradata:/opt/oracle/oradata:Z
+    - ./DB/init:/opt/oracle/scripts/setup:Z
+    environment:
+    - ORACLE_PWD=password
+    networks:
+    - course_net
