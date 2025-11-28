@@ -5,7 +5,8 @@ networks:
       driver: bridge
 
 volumes:
-    db_volume:
+  db_volume:
+  ollama_volume:
 
 services:
   frontend:
@@ -84,3 +85,14 @@ services:
     - ORACLE_PWD=password
     - SCHEMA_USER=app
     - SCHEMA_PASSWORD=apppassword
+
+  ollama:
+    build:
+      context: ./Ollama
+      dockerfile: Dockerfile
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_volume:/root/.ollama
+    networks:
+      - network
