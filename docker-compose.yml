@@ -1,3 +1,12 @@
+name: course_app
+
+networks:
+    network:
+      driver: bridge
+
+volumes:
+    db_volume:
+
 services:
   frontend:
     build:
@@ -11,6 +20,8 @@ services:
       # API_BASE_URL: "http://localhost:8081"
     ports:
       - "8080:80"
+    networks:
+      - network
 
   backend:
     build:
@@ -23,3 +34,53 @@ services:
       LOGLEVEL: "INFO"
     ports:
       - "8081:${PORT:-5689}"
+    networks:
+      - network
+
+  db:
+    image: container-registry.oracle.com/database/free:latest
+    ports:
+    - "1521:1521"
+    - "5500:5500"
+    volumes:
+    - db_volume:/opt/oracle/oradata:Z
+    environment:
+    - ORACLE_PWD=password
+    networks:
+    - network
+
+  db-migration:
+    image: ghcr.io/oracle/oraclelinux9-instantclient:23
+    depends_on:
+      - db
+    volumes:
+      - ./DB/init/db_init.sh:/scripts/db_init.sh:ro
+      - ./DB/init/sql/01_Migration.sql:/scripts/migration.sql:ro
+    environment:
+      - ORACLE_PASSWORD=password
+      - APP_USER=app
+      - APP_PASSWORD=apppassword
+      - ORACLE_HOST=db
+      - ORACLE_PORT=1521
+      - ORACLE_SERVICE=FREEPDB1
+    networks:
+      - network
+    command: ["sh", "/scripts/db_init.sh"]
+    restart: "no"
+
+  ords:
+    image: container-registry.oracle.com/database/ords:latest
+    depends_on:
+      db-migration:
+        condition: service_completed_successfully
+    networks:
+    - network
+    ports:
+      - "8181:8080"
+    environment:
+    - DBHOST=db
+    - DBPORT=1521
+    - DBSERVICENAME=FREEPDB1
+    - ORACLE_PWD=password
+    - SCHEMA_USER=app
+    - SCHEMA_PASSWORD=apppassword
