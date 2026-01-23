@@ -65,3 +65,12 @@ CREATE TABLE IF NOT EXISTS  kurs_termine (
     uhrzeit_ende  TIMESTAMP NOT NULL,
     CONSTRAINT fk_kurs_termine FOREIGN KEY (kurs_id) REFERENCES kurs(kurs_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS kurs_teilnehmer (
+    teilnehmer_id INTEGER NOT NULL,
+    termin_id     INTEGER NOT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_tkt_teilnehmer FOREIGN KEY (teilnehmer_id) REFERENCES teilnehmer(teilnehmer_id) ON DELETE CASCADE,
+    CONSTRAINT fk_tkt_termin FOREIGN KEY (termin_id) REFERENCES kurs_termine(termin_id) ON DELETE CASCADE,
+    CONSTRAINT tkt_unique UNIQUE (teilnehmer_id, termin_id)
+);
