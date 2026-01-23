@@ -7,6 +7,7 @@ networks:
 volumes:
   db_volume:
   ollama_volume:
+  ords_config:
 
 services:
   frontend:
@@ -50,13 +51,13 @@ services:
     networks:
     - network
 
-  db-migration:
-    image: ghcr.io/oracle/oraclelinux9-instantclient:23
+  db-setup:
+    build:
+      context: ./DB
+      dockerfile: Dockerfile
     depends_on:
-      - db
-    volumes:
-      - ./DB/init/db_init.sh:/scripts/db_init.sh:ro
-      - ./DB/init/sql/01_Migration.sql:/scripts/migration.sql:ro
+      ords:
+        condition: service_started
     environment:
       - ORACLE_PASSWORD=password
       - APP_USER=app
@@ -66,14 +67,14 @@ services:
       - ORACLE_SERVICE=FREEPDB1
     networks:
       - network
-    command: ["sh", "/scripts/db_init.sh"]
     restart: "no"
 
   ords:
     image: container-registry.oracle.com/database/ords:latest
     depends_on:
-      db-migration:
-        condition: service_completed_successfully
+      - db
+    volumes:
+      - ords_config:/etc/ords/config
     networks:
     - network
     ports:
